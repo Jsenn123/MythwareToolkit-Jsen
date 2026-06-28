@@ -1,6 +1,7 @@
 # 开发者文档
 
-> 面向开发者的编译、部署、项目结构说明。用户使用说明见 [README](README.md)。
+> 面向开发者的编译、部署、项目结构说明。
+> 用户使用说明见 [README](README.md)。
 
 ---
 
@@ -8,18 +9,18 @@
 
 ```
 MythwareToolkit/
-├── src/          ← 源码（9个 .cpp）
-├── include/      ← 头文件（4个 .h）
-├── res/          ← 资源（图标/图片/manifest/嵌入式exe）
-├── scripts/      ← 编译 + 打包 + 签名 + 清理 + 图标转换
-├── cert/         ← 证书 + 部署（deploy.bat / mythware.cer ）
-├── bin/          ← 编译产物 + 打包输出
-│   └── pkg/      ← 发行版文件（EXE + ZIP）
+├── src/             ← 源码（9个 .cpp）
+├── include/         ← 头文件（4个 .h）
+├── res/             ← 资源（图标/manifest/嵌入式exe）
+├── scripts/         ← 编译、签名、打包、清理
+├── cert/            ← 证书 + 部署 + 故障排查
+├── bin/             ← 编译产物 + 打包输出
+│   └── pkg/         ← 发行版文件（EXE + ZIP）
+├── convert_icon.*   ← 图标转换工具
 ├── Makefile
-├── README.md
-├── CHANGELOG.md
-├── RELEASE.md
-└── DEV.md
+├── README.md        ← 项目说明
+├── CHANGELOG.md     ← 更新日志
+└── DEV.md           ← 开发者文档
 ```
 
 ---
@@ -57,7 +58,7 @@ cert\deploy.bat      →  部署到 C:\Program Files\
 
 | 脚本 | 用途 |
 |------|------|
-| `scripts\cleanup.bat` | 管理员运行 → 清除证书/程序/快捷方式/临时文件 |
+| `scripts\cleanup.bat` | 右键管理员运行 → 清除证书/程序/快捷方式/临时文件 |
 | `scripts\sign.bat` | 手动签名 `bin\MythwareToolkit.exe`（build.bat 已自动调用） |
 | `convert_icon.bat` | PNG→ICO 多分辨率高清转换 → `res\float.ico` |
 
@@ -65,6 +66,7 @@ cert\deploy.bat      →  部署到 C:\Program Files\
 
 - [MinGW64](https://github.com/niXman/mingw-builds-binaries)（x86_64-XX.X.X-release-win32-seh-ucrt）
 - Windows 10 或更高版本（64 位）
+- 暂时没在win10以下做过测试
 - PowerShell（签名和打包）
 
 Makefile 也支持：`make` / `make portable`。

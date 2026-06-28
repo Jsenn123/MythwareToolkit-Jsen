@@ -1,5 +1,7 @@
 // floating.cpp — 圆形悬浮窗（图标、拖拽、右键菜单）
 #include "floating.h"
+#undef UNICODE
+#undef _UNICODE
 
 #define FLOAT_SIZE  33
 
@@ -82,14 +84,11 @@ LRESULT CALLBACK FloatingWndProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lPar
         case WM_CREATE: {
             CREATESTRUCT* cs = (CREATESTRUCT*)lParam;
             LOG_INFO("Floating window WM_CREATE");
-            // 加载悬浮窗专用图标（float.ico），失败则用系统默认
-            g_hIcon = (HICON)LoadImage(cs->hInstance, "FLOATICO", IMAGE_ICON,
-                                       0, 0, LR_DEFAULTSIZE);
+            //如需使用 float.ico 可将 MAINICON 替换为 FLOATICO 。在 res/resource.rc 中
+            g_hIcon = LoadIcon(cs->hInstance, "MAINICON");
             if (!g_hIcon) {
                 g_hIcon = LoadIcon(NULL, IDI_APPLICATION);
-                LOG_WARN("FLOATICO load failed, using IDI_APPLICATION");
-            } else {
-                LOG_INFO("FLOATICO loaded OK (hwnd=%p)", hWnd);
+                LOG_WARN("MAINICON load failed, using IDI_APPLICATION");
             }
 
             // 防教师端截屏：优先 WDA_EXCLUDEFROMCAPTURE，失败回退 WDA_MONITOR（黑屏）
@@ -100,8 +99,8 @@ LRESULT CALLBACK FloatingWndProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lPar
             SetTimer(hWnd, 1, 400, NULL);
             int sw = GetSystemMetrics(SM_CXSCREEN);
             int sh = GetSystemMetrics(SM_CYSCREEN);
-            SetWindowPos(hWnd, HWND_TOPMOST, sw - FLOAT_SIZE - 14,
-                         (sh - FLOAT_SIZE) / 2, FLOAT_SIZE, FLOAT_SIZE, SWP_NOACTIVATE);
+            SetWindowPos(hWnd, HWND_TOPMOST, (sw - FLOAT_SIZE) / 2, 2,
+                         FLOAT_SIZE, FLOAT_SIZE, SWP_NOACTIVATE);
             break;
         }
         case WM_TIMER:

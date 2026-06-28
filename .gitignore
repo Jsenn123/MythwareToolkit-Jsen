@@ -1,13 +1,16 @@
 # IDE
 .vscode/
 
-# Build outputs
+# Build outputs  
 bin/
 *.o
 *.res
 
 # Private keys (must never be committed)
 *.pfx
+
+# Docs (local only, not committed)
+RELEASE.md
 
 # Windows
 Thumbs.db

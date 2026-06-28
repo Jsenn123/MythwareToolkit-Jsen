@@ -77,7 +77,7 @@ void UpdateMythwareStatus() {
     if (id == 0) {
         SendMessage(TxOut, SB_SETTEXT, 1, LPARAM("极域未运行"));
         mwSts = 2;
-        SetWindowText(BtKmw, "启动极域");
+        SetWindowText(BtKmw, "恢复极域");
     } else {
         MW_INFO info = {}; info.pid = id;
         BOOL bWindowing = FALSE;
@@ -126,9 +126,14 @@ void ControlMythware(BOOL kill) {
     if (mwSts != 2) {
         DWORD pid = GetProcessIDFromName(MythwareFilename);
         LOG_INFO("ControlMythware: pid=%lu", pid);
+        // 同时杀掉守护进程防止自启
+        KillProcess(GetProcessIDFromName("MasterHelper.exe"), KILL_FORCE);
+        KillProcess(GetProcessIDFromName("GATESRV.exe"), KILL_FORCE);
+        Sleep(50);
         if (pid && KillProcess(pid, KILL_FORCE)) {
             SetWindowText(TxOut, "执行成功");
-            Sleep(30);
+            Sleep(100);
+            UpdateMythwareStatus();
         } else { ge; SetWindowText(TxOut, "执行失败"); }
     } else {
         HKEY retKey; char szPath[MAX_PATH * 2];
@@ -155,7 +160,11 @@ void ControlMythware(BOOL kill) {
                             NULL, NULL, NULL, FALSE,
                             CREATE_NEW_PROCESS_GROUP | NORMAL_PRIORITY_CLASS,
                             NULL, NULL, &si, &pi);
-        if (bResult) { SetWindowText(TxOut, "启动成功"); CloseHandle(pi.hProcess); CloseHandle(pi.hThread); }
+        if (bResult) {
+            SetWindowText(TxOut, "启动成功");
+            CloseHandle(pi.hProcess); CloseHandle(pi.hThread);
+            Sleep(100); UpdateMythwareStatus();
+        }
         else { ge; SetWindowText(TxOut, "启动失败"); }
         CloseHandle(handle); CloseHandle(token);
     }

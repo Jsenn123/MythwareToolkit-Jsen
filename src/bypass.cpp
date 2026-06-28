@@ -152,7 +152,7 @@ void UnlockSystemPrograms(HWND hwnd) {
     if (cStatus) {
         sMsg.pop_back(); sMsg.pop_back(); sMsg += "。";
         sMsg += "请重启资源管理器以应用一些功能，如需恢复Tab键请注销后重新登录。";
-        MessageBox(hwnd, sMsg.c_str(), "说明", MB_OK | MB_ICONINFORMATION | MB_SETFOREGROUND);
+        MessageBox(NULL, sMsg.c_str(), "说明", MB_OK | MB_ICONINFORMATION | MB_SETFOREGROUND);
     }
 }
 

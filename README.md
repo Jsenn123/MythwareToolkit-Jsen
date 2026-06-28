@@ -1,35 +1,22 @@
 # MythwareToolkit
 
-> 基于 [BengbuGuards/MythwareToolkit](https://github.com/BengbuGuards/MythwareToolkit) 源码进行 AI+人工修改，在此感谢原作者！
-
 > **[更新日志](CHANGELOG.md)** | **[开发者文档](DEV.md)**
 
->有问题可联系QQ：2969625400
+>有问题请加Q群：828869154
 
 极域工具包，支持极域以及学生机房管理助手的工具。
 
 ## 界面展示
 
-<div style="display:flex;gap:12px;overflow-x:auto;padding-bottom:8px">
 
-<div style="flex-shrink:0;text-align:center">
-  <img src="https://github.com/Jsenn123/Picture_bed/blob/main/img/20260628151116867.png" width="520">
-  <br>主界面
-</div>
+<img src="https://github.com/Jsenn123/Picture_bed/blob/main/img/20260628151116867.png" width="380" align="left">
+<img src="https://github.com/Jsenn123/Picture_bed/blob/main/img/20260628151116866.png" width="180" align="left">
+<img src="https://github.com/Jsenn123/Picture_bed/blob/main/img/20260628151116868.png" width="180" align="left">
 
-<div style="flex-shrink:0;text-align:center">
-  <img src="https://github.com/Jsenn123/Picture_bed/blob/main/img/20260628151116866.png" width="200">
-  <br>托盘图标
-</div>
+<br clear="left">
+*主界面（左） · 任务栏托盘（中） · 悬浮窗右键菜单（右）*
 
-<div style="flex-shrink:0;text-align:center">
-  <img src="https://github.com/Jsenn123/Picture_bed/blob/main/img/20260628151116868.png" width="240">
-  <br>悬浮窗右键菜单
-</div>
-
-</div>
-
-**当前版本：v2.1.1**
+**当前版本：v1.3.0**
 
 ---
 
@@ -41,37 +28,16 @@
 
 ---
 
-```
-MythwareToolkit/
-├── src/          ← 源码（9个 .cpp）
-├── include/      ← 头文件（4个 .h）
-├── res/          ← 资源（图标/图片/manifest/嵌入式exe）
-├── scripts/      ← 编译 + 打包 + 签名 + 清理 + 图标转换
-├── cert/         ← 证书 + 部署（deploy.bat / mythware.cer / 故障排查）
-├── bin/          ← 编译产物 + 打包输出
-│   └── pkg/      ← 发行版文件（EXE + ZIP）
-├── Makefile
-├── README.md
-├── CHANGELOG.md
-└── RELEASE.md
-```
-
----
-
 ## 功能
 
-### v2.1.1
+### v1.3.0
 
 - **圆形悬浮窗**：始终置顶，左键切换主面板，中键一键广播窗口化，右键快捷菜单（防截屏），支持拖拽
 - **退出黑屏**：主界面按钮 / 悬浮窗右键，4 级递进（隐藏 → 最小化 → ESC → 确认杀进程）
-- **防杀进程**：启动即开启，任务管理器无法结束本进程
 - **全面防截屏**：主窗口、悬浮窗、所有弹窗和菜单对教师端监控不可见
-- **UI 美化**：两组等高对齐，按钮统一尺寸，窗口紧凑合理
 - **UAC 提权**：网络限制解除、MeltdownDFC 点击即弹提权窗口
 - **崩溃诊断**：完整寄存器 + 栈回溯写入崩溃日志，运行日志记录每一步操作
 - **日志系统**：`MythwareToolkit_run.log` + `MythwareToolkit_crash.log`，追加模式
-- **图标转换**：仓库里的`convert_icon.bat` 一键 PNG→ICO，多分辨率高清()
-- **一键清理**：仓库里的`scripts/cleanup.bat` 清除证书、程序、快捷方式
 
 ### 极域控制
 
@@ -87,7 +53,7 @@ MythwareToolkit/
 
 ### 学生机房管理助手控制
 
-- 支持关闭 v6.8 ~ v12.99 版本的学生机房管理助手
+- 支持关闭 v6.8 ~ v13.1 版本的学生机房管理助手
 - 计算 v9.x ~ v12.0 临时密码（动态密码计算器）
 - 一键解禁系统程序：CMD、注册表编辑器、任务管理器、浏览器下载限制、小游戏等
 - 重启资源管理器（explorer.exe）
@@ -106,13 +72,18 @@ MythwareToolkit/
 
 ## 使用教程
 
-发行版提供两个版本，根据需求选择：
+#### 两个版本怎么选
+
+- 优先尝试 `MythwareToolkit.zip` 
+- 如果直接双击里面的 `MythwareToolkit.exe` 不可行
+- 尝试双击 `deploy.bat` 安装证书
+- 如果安装证书后还不可行，安装 `MythwareToolkit_Portable.exe`
 
 ### 便携版
 
 下载 `MythwareToolkit_Portable.exe`，**双击运行**即可。
 
-- ✅ 免安装、免签名，U 盘即插即用
+- ✅ 免安装、免签名
 - ✅ 悬浮窗 + 完整功能
 - ⚠️ 不能覆盖任务管理器（普通置顶）
 
@@ -132,18 +103,9 @@ MythwareToolkit/
 
 > **为什么必须用 deploy.bat？** UIAccess 是 Windows 安全机制：exe 必须已签名、证书必须受信任、**且 exe 必须在 `C:\Program Files\` 下**。放桌面或别处会一直弹窗，即使装了证书也没用。`deploy.bat` 一步搞定这三个条件。
 
-> 证书在非自动恢复机器上只需装一次（正常机房）
+> 证书在非自动恢复电脑上只需装一次
+>正常机房可能本身已经关闭 UAC，不需要装证书
 
-### 两个版本怎么选
-
-| | 便携版 | 超级置顶版 |
-|------|--------|-----------|
-| 怎么用 | 双击运行 | 双击运行（弹窗则装证书） |
-| 覆盖任务管理器 | ❌ | ✅ |
-| 覆盖放大镜 | ❌ | ✅ |
-| 证书 | 不需要 | 装一次 |
-| 位置 | 放哪都行 | 任意位置 |
-| 推荐场景 | 日常使用 | 教师端特别严格的环境 |
 
 
 ---

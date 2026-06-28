@@ -16,7 +16,7 @@ LFLAGS_P = -s -mwindows -lcomctl32 -lgdi32 -static
 SRCDIR   = src
 CPPS     = $(SRCDIR)/main.cpp $(SRCDIR)/utils.cpp $(SRCDIR)/process.cpp \
            $(SRCDIR)/bypass.cpp $(SRCDIR)/assistant.cpp $(SRCDIR)/mythware.cpp \
-           $(SRCDIR)/hooks.cpp $(SRCDIR)/psd.cpp $(SRCDIR)/floating.cpp
+           $(SRCDIR)/hooks.cpp $(SRCDIR)/psd.cpp $(SRCDIR)/ui.cpp $(SRCDIR)/floating.cpp
 
 # Object files
 OUTDIR   = bin
