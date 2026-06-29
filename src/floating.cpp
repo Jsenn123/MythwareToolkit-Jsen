@@ -182,7 +182,7 @@ LRESULT CALLBACK FloatingWndProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lPar
             AppendMenu(hMenu, MF_STRING, 1, (hwnd && IsWindowVisible(hwnd)) ? "隐藏面板" : "打开面板");
             AppendMenu(hMenu, MF_SEPARATOR, 0, NULL);
             AppendMenu(hMenu, MF_STRING, 7, "退出黑屏");
-            AppendMenu(hMenu, MF_STRING, 6, "广播窗口化");
+            AppendMenu(hMenu, MF_STRING, 6, "最小化焦点窗口");
             AppendMenu(hMenu, MF_STRING, 2, "杀掉极域");
             AppendMenu(hMenu, MF_STRING, 3, "杀机房助手");
             AppendMenu(hMenu, MF_STRING, 4, "解禁系统程序");
@@ -200,7 +200,7 @@ LRESULT CALLBACK FloatingWndProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lPar
                     }
                     break;
                 case 7: ExitBlackScreen(); break;
-                case 6: ToggleBroadcastWindow(); UpdateMythwareStatus(); break;
+                case 6: { HWND hFg = GetForegroundWindow(); if (hFg) ShowWindow(hFg, SW_MINIMIZE); break; }
                 case 2: if (hwnd) { ControlMythware(FALSE); UpdateMythwareStatus(); } break;
                 case 3: KillStudentAssistant(); break;
                 case 4: UnlockSystemPrograms(hwnd); break;
