@@ -6,3 +6,4 @@
 HWND CreateFloatingWindow(HINSTANCE hInstance);   // 创建悬浮窗
 void DestroyFloatingWindow();                       // 销毁悬浮窗
 void ToggleFloatingWindow();                        // 显示/隐藏切换
+void ResetFloatingWindowPos();                      // 复位到默认位置

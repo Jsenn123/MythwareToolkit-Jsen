@@ -9,9 +9,9 @@
 ## 界面展示
 
 
-<img src="https://github.com/Jsenn123/Picture_bed/blob/main/img/20260628151116867.png" width="380" align="left">
+<img src="https://github.com/Jsenn123/Picture_bed/blob/main/img/20260629174135729.png" width="380" align="left">
 <img src="https://github.com/Jsenn123/Picture_bed/blob/main/img/20260628151116866.png" width="180" align="left">
-<img src="https://github.com/Jsenn123/Picture_bed/blob/main/img/20260628151116868.png" width="180" align="left">
+<img src="https://github.com/Jsenn123/Picture_bed/blob/main/img/20260629174135730.png" width="180" align="left">
 
 <br clear="left">
 *主界面（左） · 任务栏托盘（中） · 悬浮窗右键菜单（右）*
@@ -33,6 +33,7 @@
 ### v1.3.0
 
 - **圆形悬浮窗**：始终置顶，左键切换主面板，中键一键广播窗口化，右键快捷菜单（防截屏），支持拖拽
+- **悬浮窗右键菜单**：
 - **退出黑屏**：主界面按钮 / 悬浮窗右键，4 级递进（隐藏 → 最小化 → ESC → 确认杀进程）
 - **全面防截屏**：主窗口、悬浮窗、所有弹窗和菜单对教师端监控不可见
 - **UAC 提权**：网络限制解除、MeltdownDFC 点击即弹提权窗口

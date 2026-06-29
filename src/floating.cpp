@@ -264,3 +264,11 @@ void ToggleFloatingWindow() {
         ShowWindow(g_hFloating, SW_SHOW);
     }
 }
+
+void ResetFloatingWindowPos() {
+    if (g_hFloating && IsWindow(g_hFloating)) {
+        int sw = GetSystemMetrics(SM_CXSCREEN);
+        SetWindowPos(g_hFloating, HWND_TOPMOST, (sw - FLOAT_SIZE) / 2, 2,
+                     FLOAT_SIZE, FLOAT_SIZE, SWP_NOACTIVATE);
+    }
+}

@@ -103,6 +103,59 @@ static void RunEmbeddedExe(int resId, LPCSTR exeName) {
     }
 }
 
+// ── 鼠标角落检测：停留 > 800ms 触发，离开 > 500ms 才允许再次触发 ──
+static DWORD g_cornerEnterTime = 0;
+static DWORD g_cornerLeaveTime = 0;
+static bool  g_wasInCorner    = false;
+
+static void CheckCornerTrigger(HWND hwnd) {
+    if (!ask || asking) return;
+    GetCursorPos(&p);
+
+    bool inCorner = (p.x == 0 || p.x == w) && p.y == 0;
+    DWORD now = GetTickCount();
+
+    if (!inCorner) {
+        if (g_wasInCorner) { g_cornerLeaveTime = now; g_wasInCorner = false; }
+        g_cornerEnterTime = 0;
+        return;
+    }
+    // 在角落里
+    if (!g_wasInCorner) {
+        // 刚进入角落：检查去抖间隔
+        if (now - g_cornerLeaveTime < 500) return;
+        g_cornerEnterTime = now;
+        g_wasInCorner = true;
+    }
+    // 停留不够 800ms
+    if (now - g_cornerEnterTime < 800) return;
+
+    // ── 触发 ──
+    asking = true;
+    SetWindowPos(hwnd, NULL, 0, 0, 0, 0, SWP_NOSIZE | SWP_NOZORDER);
+    ResetFloatingWindowPos();
+
+    HWND hFg = GetForegroundWindow();
+    if (p.x == 0) { // 左上角：最小化
+        if (MessageBox(hwnd, "检测到鼠标位置变化！是否最小化焦点窗口？",
+            "实时提醒", MB_YESNO | MB_ICONINFORMATION | MB_SETFOREGROUND | MB_TOPMOST) == IDYES)
+            if (!IsHungAppWindow(hFg)) ShowWindow(hFg, SW_MINIMIZE);
+    } else { // 右上角：关闭
+        HHOOK hook = SetWindowsHookEx(WH_CBT, CBTProc, NULL, GetCurrentThreadId());
+        int id = MessageBox(hwnd, "检测到鼠标位置变化！是否关闭焦点窗口？",
+            "实时提醒", MB_YESNOCANCEL | MB_ICONINFORMATION | MB_SETFOREGROUND | MB_TOPMOST);
+        UnhookWindowsHookEx(hook);
+        if (id == IDYES) PostMessage(hFg, WM_CLOSE, 0, 0);
+        else if (id == IDNO) {
+            HWND hP = CreateWindowEx(0, WC_STATIC, "", 0,0,0,0,0,NULL,NULL,NULL,NULL);
+            SetParent(hFg, hP); ge; PostMessage(hP, WM_CLOSE, 0, 0);
+        }
+    }
+    asking = false;
+    g_cornerEnterTime = 0;
+    g_wasInCorner = false;
+}
+
 LRESULT CALLBACK WndProc(HWND hwnd, UINT Message, WPARAM wParam, LPARAM lParam) {
     switch (Message) {
         case WM_CREATE: {
@@ -263,11 +316,7 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT Message, WPARAM wParam, LPARAM lParam) 
             if (SendMessage(BtSnp, BM_GETCHECK, 0, 0) == BST_CHECKED)
                 SetWindowDisplayAffinity(hwnd, WDA_EXCLUDEFROMCAPTURE);
             switch (wParam) {
-                case 1: if (!asking && ask) {
-                    GetCursorPos(&p);
-                    if (p.x == 0 && p.y == 0) { asking = true; HWND topHwnd = GetForegroundWindow(); if (MessageBox(hwnd, "检测到鼠标位置变化！是否最小化焦点窗口？", "实时提醒", MB_YESNO | MB_ICONINFORMATION | MB_SETFOREGROUND | MB_TOPMOST) == IDYES) { if (!IsHungAppWindow(topHwnd)) ShowWindow(topHwnd, SW_MINIMIZE); } asking = false; }
-                    else if (p.x == w && p.y == 0) { asking = true; HWND topHwnd = GetForegroundWindow(); HHOOK hCBTHook = SetWindowsHookEx(WH_CBT, CBTProc, NULL, GetCurrentThreadId()); int id = MessageBox(hwnd, "检测到鼠标位置变化！是否关闭焦点窗口？", "实时提醒", MB_YESNOCANCEL | MB_ICONINFORMATION | MB_SETFOREGROUND | MB_TOPMOST); UnhookWindowsHookEx(hCBTHook); if (id == IDYES) PostMessage(topHwnd, WM_CLOSE, 0, 0); else if (id == IDNO) { HWND hParent = CreateWindowEx(0, WC_STATIC, "", 0, 0, 0, 0, 0, NULL, NULL, NULL, NULL); SetParent(topHwnd, hParent); ge; PostMessage(hParent, WM_CLOSE, 0, 0); } asking = false; }
-                } break;
+                case 1: CheckCornerTrigger(hwnd); break;
                 case 2: SetWindowText(hwnd, RandomWindowTitle()); UpdateMythwareStatus(); break;
                 case 3: closingProcess = false; KillTimer(hwnd, 3); break;
             }
